@@ -184,7 +184,6 @@ public class NotificationsPlugin extends Plugin implements NotificationReceiver.
 
         if ((notification.flags & Notification.FLAG_FOREGROUND_SERVICE) != 0
                 || (notification.flags & Notification.FLAG_ONGOING_EVENT) != 0
-                || (notification.flags & Notification.FLAG_LOCAL_ONLY) != 0
                 || (notification.flags & NotificationCompat.FLAG_GROUP_SUMMARY) != 0 //The notification that groups other notifications
         )
         {
@@ -201,6 +200,10 @@ public class NotificationsPlugin extends Plugin implements NotificationReceiver.
         String packageName = statusBarNotification.getPackageName();
         String appName = AppsHelper.appNameLookup(context, packageName);
 
+        if (!packageName.equals("com.tencent.mm") && (notification.flags & Notification.FLAG_LOCAL_ONLY) != 0) {
+            // ignore local only notification expect WeChat
+            return;
+        }
 
         if ("com.facebook.orca".equals(packageName) &&
                 (statusBarNotification.getId() == 10012) &&
